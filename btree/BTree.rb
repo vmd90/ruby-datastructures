@@ -29,13 +29,20 @@ KEY_ALREADY_ADDED = 5
 
 # Representa um registro na arvore B
 class Record
-  attr_accessor :name, :RRN, :size
+  attr_accessor :name, :RRN
   
   @@size = 56
 
   def initialize(name="", rrn=INVALID)
     @name = name
     @RRN = rrn
+  end
+
+  def self.getSize
+    @@size
+  end
+  def self.setSize(size)
+    @@size = size
   end
 end
 
@@ -150,9 +157,10 @@ class BTree
 
     rrn = 0
     begin
+      Record.new
       # Ler arquivo, cada linha
-      @dataFile.each_line(Record.size) { |line| 
-        name = line.slice(4, 30).gsub(/[#]/, "")
+      @dataFile.each_line(Record.getSize) { |line| 
+        name = line.slice(4, 29).gsub(/[#]/, "")
         self.insert(name, rrn)
         rrn += 1
       }
@@ -264,13 +272,13 @@ class BTree
       arr.push(word) unless word == ""
     }
     puts "\nDados do piloto:"
-    puts "ID = ", id
-    puts "Nome = ", arr[0]
-    puts "Pais = ", arr[1]
-    puts "Titulos = ", arr[2]
-    puts "Corridas = ", arr[3]
-    puts "Poles = ", arr[4]
-    puts "Vitorias = ", arr[5]
+    puts "ID = #{id}"
+    puts "Nome = #{arr[0]}"
+    puts "Pais = #{arr[1]}"
+    puts "Titulos = #{arr[2]}"
+    puts "Corridas = #{arr[3]}"
+    puts "Poles = #{arr[4]}"
+    puts "Vitorias = #{arr[5]}"
     @dataFile.rewind()
   end
 end
@@ -325,7 +333,7 @@ def main
   print "Path do arquivo de dados: "
   dataFile = gets.chomp
 
-  print "Comandos:\n\tSEARCH(arg)\n\tINSERT(arg)\n"
+  print "Comandos:\n\tBUSCA(arg)\n\tINSERE(arg)\n"
   begin
     btree = BTree.new(n)
     btree.buildFromFile(dataFile)
