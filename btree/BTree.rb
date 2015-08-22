@@ -1,4 +1,3 @@
-#!/usr/bin/env ruby
 =begin
 --------------------------------------------------------------------------
  BTree implementation using Ruby     
@@ -38,10 +37,10 @@ class Record
     @RRN = rrn
   end
 
-  def self.getSize
+  def Record.getSize
     @@size
   end
-  def self.setSize(size)
+  def Record.setSize(size)
     @@size = size
   end
 end
@@ -263,9 +262,9 @@ class BTree
   end
   
   def printDataInfo(rrn)
-    @dataFile.seek(56 * rrn, IO::SEEK_SET)
+    @dataFile.seek(Record.getSize * rrn, IO::SEEK_SET)
     # lendo o registro
-    reg = @dataFile.read(56)
+    reg = @dataFile.read(Record.getSize)
     id = reg[0,4]
     arr = []
     reg[4, reg.size].split("#").each { |word|
@@ -322,68 +321,3 @@ def strcmp(s1, s2)
     end
   end
 end
-
-#----------------------------------------------------------
-# main entry point function
-#----------------------------------------------------------
-def main
-  # lendo do teclado grau da arvore
-  print "Grau da arvore (maior que 1): "
-  n = gets.chomp.to_i
-  print "Path do arquivo de dados: "
-  dataFile = gets.chomp
-
-  print "Comandos:\n\tBUSCA(arg)\n\tINSERE(arg)\n"
-  begin
-    btree = BTree.new(n)
-    btree.buildFromFile(dataFile)
-    
-    loop {
-      cmd = gets.chomp
-      if cmd == "FIM"  # Termina o programa
-        break
-      end
-      
-      cmd = cmd.split(/[()]/)
-      case cmd[0]
-      when "BUSCA"
-        if cmd.size <= 1
-          puts "Argumento faltando: nome"
-          next
-        end
-        print("-------------------------------\nNos percorridos:\n");
-        retval, rrn = btree.search(cmd[1])
-        if retval == NOT_FOUND
-          puts "\nRegistro nao encontrado"
-          next
-        end
-        print("\n");
-        btree.printDataInfo(rrn);
-        print("\n-------------------------------\n");
-      when "INSERE"
-        if cmd.size <= 1
-          puts "\nRegistro para insercao faltando"
-          next
-        end
-        name = cmd[4, cmd[1].size]
-        btree.dataFile.seek(0, IO::SEEK_END)
-        rrn = btree.dataFile.tell() / 56
-        retval = btree.insert(name, rrn)
-        if retval == KEY_ALREADY_ADDED
-          puts "\nRegistro ja foi inserido"
-          next
-        end
-        # write into file
-        btree.dataFile.seek(0, IO::SEEK_END)
-        btree.dataFile << cmd[1].to_s
-        btree.dataFile.seek(0, IO::SEEK_SET)
-        puts "\nRegistro inserido"
-      else
-        puts "Comando desconhecido"
-      end
-    }
-  rescue => err
-    puts("Erro: #{err}")
-  end
-end
-main
