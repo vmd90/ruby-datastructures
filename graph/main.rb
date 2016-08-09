@@ -19,7 +19,7 @@
 --------------------------------------------------------------------------
 =end
 
-require "./Graph/Graph"
+require "./Graph"
 
 g = MGraph.new(5)
 g.addEdge(2, 3)

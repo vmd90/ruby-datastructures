@@ -32,8 +32,8 @@ class Record
   
   @@size = 56
 
-  def initialize(name="", rrn=INVALID)
-    @name = name
+  def initialize(_name="", rrn=INVALID)
+    @name = _name
     @RRN = rrn
   end
 
@@ -156,7 +156,7 @@ class BTree
 
     rrn = 0
     begin
-      Record.new
+      r = Record.new
       # Ler arquivo, cada linha
       @dataFile.each_line(Record.getSize) { |line| 
         name = line.slice(4, 29).gsub(/[#]/, "")

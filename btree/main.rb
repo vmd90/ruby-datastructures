@@ -33,6 +33,7 @@ def main
     btree.buildFromFile(dataFile)
     
     loop {
+      puts "passou"
       cmd = gets.chomp
       if cmd == "FIM"  # Termina o programa
         break

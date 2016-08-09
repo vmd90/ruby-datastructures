@@ -17,7 +17,22 @@
   limitations under the License.
 --------------------------------------------------------------------------
 =end
-require "Matrix"
+require 'matrix'
+
+class Vertex
+  attr_accessor :value, :next
+  def initialize(value)
+    @value = value
+    @next = nil
+  end
+end
+# Matrix class, modification of the original Matrix class
+# This one allows to set single element
+class Matrix
+  def []=(row, column, value)
+    @rows[row][column] = value
+  end
+end
 
 # Abstract class Graph (is empty)
 class Graph
@@ -150,20 +165,5 @@ class LinkedList
       puts "#{n.value}"
       n = n.next
     end
-  end
-end
-
-class Vertex
-  attr_accessor :value, :next
-  def initialize(value)
-    @value = value
-    @next = nil
-  end
-end
-# Matrix class, modification of the original Matrix class
-# This one allows to set single element
-class Matrix
-  def []=(i, j, x)
-    @rows[i][j] = x
   end
 end
